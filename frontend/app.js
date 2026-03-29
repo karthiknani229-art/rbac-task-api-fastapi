@@ -7,12 +7,17 @@ async function register() {
 
   const res = await fetch(`${API}/auth/register`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      email,
+      password
+    })
   });
 
-  document.getElementById("message").innerText =
-    res.status === 201 ? "Registered successfully" : "Registration failed";
+  const data = await res.json();
+  console.log("REGISTER RESPONSE:", data);
 }
 
 // ================= LOGIN =================
@@ -32,24 +37,36 @@ async function login() {
     localStorage.setItem("token", data.access_token);
     window.location.href = "dashboard.html";
   } else {
-    document.getElementById("message").innerText = "Login failed";
+    const msg = document.getElementById("message");
+    if (msg) msg.innerText = "Login failed";
   }
 }
 
 // ================= CREATE TASK =================
 async function createTask() {
-  const token = localStorage.getItem("token");
-  const title = document.getElementById("title").value;
-  const description = document.getElementById("desc").value;
+  const title = document.getElementById("taskTitle").value;
+  const description = document.getElementById("taskDesc").value;
 
-  await fetch(`${API}/tasks/`, {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${API}/tasks/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      "Authorization": "Bearer " + token
     },
-    body: JSON.stringify({ title, description }),
+    body: JSON.stringify({
+      title,
+      description
+    })
   });
+
+  const data = await res.json();
+  console.log("CREATE TASK:", data);
+
+  // clear inputs
+  document.getElementById("taskTitle").value = "";
+  document.getElementById("taskDesc").value = "";
 
   loadTasks();
 }
@@ -57,21 +74,62 @@ async function createTask() {
 // ================= LOAD TASKS =================
 async function loadTasks() {
   const token = localStorage.getItem("token");
+
   const res = await fetch(`${API}/tasks/`, {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: {
+      "Authorization": "Bearer " + token
+    }
   });
 
-  const tasks = await res.json();
-  const list = document.getElementById("taskList");
+  const data = await res.json();
+  console.log("TASKS:", data);
 
+  renderTasks(data);
+}
+
+// ================= RENDER TASKS =================
+function renderTasks(tasks) {
+  const list = document.getElementById("taskList");
   if (!list) return;
 
   list.innerHTML = "";
-  tasks.forEach(t => {
-    const li = document.createElement("li");
-    li.innerText = t.title + " - " + (t.description || "");
-    list.appendChild(li);
+
+  if (tasks.length === 0) {
+    list.innerHTML = `<p class="text-gray-500 text-sm">No tasks yet</p>`;
+    return;
+  }
+
+  tasks.forEach(task => {
+    const div = document.createElement("div");
+    div.className = "bg-white p-4 rounded-xl shadow flex justify-between items-start";
+
+    div.innerHTML = `
+      <div>
+        <h3 class="font-semibold">${task.title}</h3>
+        <p class="text-sm text-gray-600">${task.description || ""}</p>
+      </div>
+      <button onclick="deleteTask(${task.id})"
+        class="text-red-500 text-sm hover:underline">
+        Delete
+      </button>
+    `;
+
+    list.appendChild(div);
   });
+}
+
+// ================= DELETE TASK =================
+async function deleteTask(id) {
+  const token = localStorage.getItem("token");
+
+  await fetch(`${API}/tasks/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Authorization": "Bearer " + token
+    }
+  });
+
+  loadTasks();
 }
 
 // ================= LOGOUT =================
@@ -80,7 +138,7 @@ function logout() {
   window.location.href = "index.html";
 }
 
-// auto-load tasks on dashboard
+// ================= AUTO LOAD =================
 if (window.location.pathname.includes("dashboard")) {
   loadTasks();
 }

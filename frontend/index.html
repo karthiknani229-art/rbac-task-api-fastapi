@@ -2,19 +2,44 @@
 <html>
 <head>
   <title>RBAC App</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-  <h2>Register</h2>
-  <input id="regEmail" placeholder="Email">
-  <input id="regPassword" type="password" placeholder="Password">
-  <button onclick="register()">Register</button>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
 
-  <h2>Login</h2>
-  <input id="loginEmail" placeholder="Email">
-  <input id="loginPassword" type="password" placeholder="Password">
-  <button onclick="login()">Login</button>
+  <div class="bg-white p-6 rounded-2xl shadow-lg w-80 space-y-4">
+    
+    <h2 class="text-xl font-semibold text-center">RBAC Task App</h2>
 
-  <p id="message"></p>
+    <!-- Register -->
+    <div>
+      <h3 class="text-sm font-medium">Register</h3>
+      <input id="regEmail" type="email" placeholder="Email"
+        class="w-full p-2 border rounded mt-1">
+      <input id="regPassword" type="password" placeholder="Password"
+        class="w-full p-2 border rounded mt-2">
+      <button onclick="register()"
+        class="w-full bg-blue-500 text-white p-2 rounded mt-2 hover:bg-blue-600">
+        Register
+      </button>
+    </div>
+
+    <!-- Login -->
+    <div>
+      <h3 class="text-sm font-medium">Login</h3>
+      <input id="loginEmail" type="email" placeholder="Email"
+        class="w-full p-2 border rounded mt-1">
+      <input id="loginPassword" type="password" placeholder="Password"
+        class="w-full p-2 border rounded mt-2">
+      <button onclick="login()"
+        class="w-full bg-green-500 text-white p-2 rounded mt-2 hover:bg-green-600">
+        Login
+      </button>
+    </div>
+
+  </div>
+
+</body>
 
   <script src="app.js"></script>
 </body>
