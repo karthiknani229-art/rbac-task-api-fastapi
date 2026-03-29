@@ -5,6 +5,9 @@ Role Applied: Backend Developer Intern
 Tech Stack: FastAPI, SQLAlchemy, SQLite, JWT, Vanilla JS
 
 ---
+deployed links
+backend: https://rbac-task-api-fastapi.onrender.com/
+frontend: https://rbac-task-api.netlify.app/
 
  Overview
 
