@@ -1,4 +1,4 @@
-const API = "http://127.0.0.1:8000/api/v1";
+const API = "https://rbac-task-api-fastapi.onrender.com/api/v1";
 
 // ================= REGISTER =================
 async function register() {
