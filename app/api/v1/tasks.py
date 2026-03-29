@@ -7,7 +7,6 @@ from app.db import models
 from app.schemas.task_schema import TaskCreate, TaskUpdate, TaskOut
 from app.api.deps import get_current_user
 router = APIRouter(
-    prefix="/api/v1/tasks",
     tags=["Tasks"]
 )
 @router.post("/", response_model=TaskOut, status_code=status.HTTP_201_CREATED)

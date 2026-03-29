@@ -7,7 +7,7 @@ from app.db.database import get_db
 from app.db import models
 from app.schemas.user_schema import UserCreate, UserLogin, UserOut
 from app.core.security import hash_password, verify_password, create_access_token
-router = APIRouter(prefix="/api/v1/auth", tags=["Auth"])
+router = APIRouter( tags=["Auth"])
 @router.post("/register", response_model=UserOut, status_code=status.HTTP_201_CREATED)
 def register(user_data: UserCreate, db: Session = Depends(get_db)):
     # Check if user exists
