@@ -1,216 +1,165 @@
-RBAC Task API — Scalable Backend with JWT Authentication
+# RBAC Task API
 
-Author: Penta Karthik  
-Role Applied: Backend Developer Intern  
-Tech Stack: FastAPI, SQLAlchemy, SQLite, JWT, Vanilla JS
+A secure REST API implementing JWT authentication, role-based access control, and protected task management — built with FastAPI, SQLAlchemy, and SQLite.
 
----
-deployed links
-backend: https://rbac-task-api-fastapi.onrender.com/
-frontend: https://rbac-task-api.netlify.app/
+## Live Demo
 
- Overview
+- Frontend: https://rbac-task-api.netlify.app/
+- Backend API: https://rbac-task-api-fastapi.onrender.com/
+- Swagger Docs: https://rbac-task-api-fastapi.onrender.com/docs
 
-This project is a secure and scalable REST API implementing:
+> Note: Backend is on Render's free tier — first request may take 30–60 seconds due to cold start.
 
-- User Authentication (JWT + bcrypt)
-- Role-Based Access Control (RBAC)
-- Protected CRUD operations on Tasks
-- Production-style modular architecture
-- Interactive API documentation (Swagger)
-- Basic frontend integration
+## Tech Stack
 
-The system demonstrates end-to-end backend engineering practices expected in real-world services.
+**Backend:** Python, FastAPI, SQLAlchemy, SQLite
 
----
+**Auth:** JWT, bcrypt
 
- Features
+**Frontend:** HTML, CSS, Vanilla JavaScript
 
-Authentication
-- User registration
-- Secure password hashing (bcrypt)
-- JWT-based login
-- Token expiration handling
-- Protected routes
+**Deployment:** Netlify (Frontend), Render (Backend)
 
- Role-Based Access Control
-- User→ manages own tasks
-- Admin → can access all tasks
-- Proper 401 vs 403 handling
+## Features
 
- Task Management (CRUD)
-- Create task
-- List tasks (ownership-aware)
-- Get single task
-- Update task
-- Delete task
+**Authentication**
+- User registration and login
+- Secure password hashing with bcrypt
+- JWT-based authentication with token expiration
+- Protected routes via dependency injection
 
- Frontend (Supportive)
-- Register & Login UI
-- JWT stored in localStorage
-- Protected dashboard
-- Task creation & listing
-- Error/success feedback
+**Role-Based Access Control**
+- User — manages own tasks only
+- Admin — access to all tasks
+- Proper 401 (unauthenticated) vs 403 (unauthorized) handling
+- Ownership enforcement on task operations
 
-API Documentation
-- Swagger UI available
-- OpenAPI schema generated
-- Bearer token authorization supported
+**Task Management**
+- Create, read, update, and delete tasks
+- Ownership-aware task listing
+- Role-aware access on all endpoints
 
----
+**API**
+- Swagger UI with Bearer token authorization
+- OpenAPI schema auto-generated
+- API versioning (`/api/v1`)
 
-Project Structure
+## Project Structure
 
-
+```
 backend-rbac-api/
 │
 ├── app/
-│ ├── api/
-│ │ ├── deps.py
-│ │ └── v1/
-│ │ ├── auth.py
-│ │ └── tasks.py
-│ │
-│ ├── core/
-│ │ └── security.py
-│ │
-│ ├── db/
-│ │ ├── database.py
-│ │ └── models.py
-│ │
-│ ├── schemas/
-│ │ ├── user_schema.py
-│ │ └── task_schema.py
-│ │
-│ └── main.py
+│   ├── api/
+│   │   ├── deps.py
+│   │   └── v1/
+│   │       ├── auth.py
+│   │       └── tasks.py
+│   ├── core/
+│   │   └── security.py
+│   ├── db/
+│   │   ├── database.py
+│   │   └── models.py
+│   ├── schemas/
+│   │   ├── user_schema.py
+│   │   └── task_schema.py
+│   └── main.py
 │
 ├── frontend/
-│ ├── index.html
-│ ├── dashboard.html
-│ └── app.js
+│   ├── index.html
+│   ├── dashboard.html
+│   └── app.js
 │
 ├── requirements.txt
 └── README.md
+```
 
+## API Endpoints
 
----
+**Auth**
 
- Setup Instructions
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | /api/v1/auth/register | Register new user |
+| POST | /api/v1/auth/login | Login and get JWT |
 
- Clone repository
+**Tasks (Protected)**
 
-bash
-git clone <your-repo-link>
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | /api/v1/tasks/ | Create task |
+| GET | /api/v1/tasks/ | List tasks (ownership-aware) |
+| GET | /api/v1/tasks/{id} | Get single task |
+| PUT | /api/v1/tasks/{id} | Update task |
+| DELETE | /api/v1/tasks/{id} | Delete task |
+
+## Local Setup
+
+**1. Clone the repository**
+
+```bash
+git clone https://github.com/karthiknani229-art/rbac-task-api-fastapi.git
 cd backend-rbac-api
-2️⃣ Create virtual environment
+```
+
+**2. Create and activate virtual environment**
+
+```bash
 python -m venv venv
 
-Activate:
-
-Windows
-
+# Windows
 .\venv\Scripts\activate
 
-Mac/Linux
-
+# Mac/Linux
 source venv/bin/activate
-3️⃣ Install dependencies
+```
+
+**3. Install dependencies**
+
+```bash
 pip install -r requirements.txt
-4️⃣ Run backend server
+```
+
+**4. Start the server**
+
+```bash
 uvicorn app.main:app --reload
+```
 
-Backend will run at:
+Server runs at: http://127.0.0.1:8000
 
-http://127.0.0.1:8000
-5️⃣ Open Swagger Docs
-http://127.0.0.1:8000/docs
-6️⃣ Run Frontend
+Swagger docs at: http://127.0.0.1:8000/docs
 
-Open in browser:
+**5. Open frontend**
 
-frontend/index.html
- API Usage Flow
-Step 1 — Register
-POST /api/v1/auth/register
-Step 2 — Login
-POST /api/v1/auth/login
+Open `frontend/index.html` directly in your browser.
 
-Copy the returned JWT.
+## API Usage Flow
 
-Step 3 — Authorize
+1. Register via `POST /api/v1/auth/register`
+2. Login via `POST /api/v1/auth/login` and copy the JWT
+3. In Swagger: click Authorize → paste `Bearer <token>`
+4. Use protected task endpoints
 
-In Swagger:
+## Design Decisions
 
-Authorize → Bearer <token>
-Step 4 — Use Protected Task APIs
-POST   /api/v1/tasks/
-GET    /api/v1/tasks/
-GET    /api/v1/tasks/{id}
-PUT    /api/v1/tasks/{id}
-DELETE /api/v1/tasks/{id}
- Security Features
+**Modular layered architecture** — routes, dependencies, schemas, and models are fully separated for maintainability and testability.
 
-bcrypt password hashing
+**Stateless JWT** — enables horizontal scaling without shared session state.
 
-JWT authentication with expiry
+**SQLAlchemy abstraction** — switching from SQLite to PostgreSQL or MySQL requires only a connection string change.
 
-Protected route dependencies
+**API versioning** — all endpoints under `/api/v1` for forward compatibility.
 
-Role-based authorization
+## Future Improvements
 
-Ownership enforcement
+- Refresh token mechanism
+- Pagination for task listing
+- Redis caching layer
+- Docker containerization
+- Unit and integration tests
+- Rate limiting
 
-Proper HTTP status codes
+## Author
 
- Scalability Considerations
-
-The project is designed with scalability in mind:
-
-Modular layered architecture
-
-Stateless JWT authentication (horizontal scaling friendly)
-
-Database abstraction via SQLAlchemy
-
-Easy migration to Postgres/MySQL
-
-Ready for Redis caching integration
-
-Can be containerized with Docker
-
-API versioning implemented (/api/v1)
-
- Future Improvements
-
-Refresh token mechanism
-
-Pagination for tasks
-
-Redis caching layer
-
-Docker containerization
-
-Unit & integration tests
-
-Role management UI
-
-Rate limiting
-
- Assignment Requirements Mapping
-Requirement	Status
-JWT Authentication	
-Password Hashing	
-RBAC	
-Protected CRUD	
-API Versioning	
-Error Handling	
-Swagger Docs	
-Database Schema	
-Basic Frontend	
-
-
-
-
-Author
-
-Penta Karthik
+Penta Karthik — [GitHub](https://github.com/karthiknani229-art)
